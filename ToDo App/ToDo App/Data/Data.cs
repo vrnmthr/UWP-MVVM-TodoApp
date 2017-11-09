@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    class DataProvider : IDataProvider
+    public class DataProvider : IDataProvider
     {
         List<Todo> Todos = new List<Todo>();
 
