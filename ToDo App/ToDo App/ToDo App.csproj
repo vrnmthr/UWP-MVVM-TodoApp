@@ -95,13 +95,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data\Data.cs" />
+    <Compile Include="Data\DataService.cs" />
     <Compile Include="Data\IDataProvider.cs" />
     <Compile Include="Data\Todo.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\Todos.cs" />
+    <Compile Include="Models\TodoListModel.cs" />
+    <Compile Include="Shivani.cs" />
+    <Compile Include="ViewModels\NotificationBase.cs" />
+    <Compile Include="ViewModels\ToDoListViewModel.cs" />
+    <Compile Include="ViewModels\TodoViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -23,8 +23,8 @@ namespace Data
         /// <summary>
         /// Recycles todo with given ID
         /// </summary>
-        /// <param name="id">Guid of todo to recycle</param>
-        void Recycle(Guid id);
+        /// <param name="id">Id of todo to recycle</param>
+        void Recycle(int id);
 
         /// <summary>
         /// Finds the Todo with a matching ID as the given one

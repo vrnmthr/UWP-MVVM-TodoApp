@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    public class DataProvider : IDataProvider
+    public class DataService : IDataProvider
     {
         List<Todo> Todos = new List<Todo>();
 
@@ -34,7 +34,7 @@ namespace Data
             todo.Recycled = true;
         }
 
-        public void Recycle(Guid id)
+        public void Recycle(int id)
         {
             Todo t = Todos.Where(x => x.Id.Equals(id)).Single();
             t.Recycled = true;

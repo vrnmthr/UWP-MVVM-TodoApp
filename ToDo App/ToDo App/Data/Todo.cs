@@ -8,9 +8,10 @@ namespace Data
 {
     public class Todo
     {
-        public Guid Id;
-        public string Note;
-        public DateTime DateAssigned;
-        public bool Recycled;
+        public int Id { get; }
+        public string Note { get; set; }
+        public DateTime DateAssigned { get; set; }
+        public bool Recycled { get; set; }
+
     }
 }
