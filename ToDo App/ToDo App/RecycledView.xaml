@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="ToDo_App.MainPage"
+    x:Class="ToDo_App.RecycledView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:ViewModels"
@@ -20,12 +20,9 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0" Orientation="Vertical">
-            <Button Content="New" Click="{x:Bind Todos.Add}" Margin="5"/>
-            <TextBlock Text="Debugging:"></TextBlock>
-            <TextBlock Text="{x:Bind Todos.SelectedIndex, Mode=OneWay}"></TextBlock>
-            <TextBlock Text="End----"></TextBlock>
-            <ListView  x:Name="MainList" 
-              ItemsSource="{x:Bind Todos.Todos, Mode=OneWay}"  
+            <TextBlock Text="Your Recycled Todos:"></TextBlock>
+            <ListView  x:Name="RecycledList" 
+              ItemsSource="{x:Bind Todos.RecycledTodos, Mode=OneWay}"  
               SelectedIndex="{x:Bind Todos.SelectedIndex, Mode=TwoWay}" 
               MinWidth="250" Margin="5" MaxWidth="300">
                 <ListView.ItemTemplate>
@@ -36,18 +33,12 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <HyperlinkButton Content="See Recycled Todos"
-             Click="HyperlinkButton_Click"/>
+            <HyperlinkButton Content="See All Todos"
+             Click="HyperlinkButton_Click" Margin="5"/>
         </StackPanel>
 
         <StackPanel Grid.Column="2" Orientation="Vertical" Visibility="{x:Bind Todos.SelectedTodo, Mode=OneWay, Converter={StaticResource ObjectExistsToVisible}}" >
-            <TextBlock
-              Text="{x:Bind Todos.SelectedTodo.DateAssigned, Mode=OneWay, FallbackValue=''}" 
-              Margin="5"/>
-            <TextBox 
-              Text="{x:Bind Todos.SelectedTodo.Note, Mode=TwoWay, FallbackValue=''}" 
-              Margin="5" TextWrapping="Wrap" MinWidth="300"/>
-            <Button Content="Recycle" Click="{x:Bind Todos.Delete}" Margin="5" />
+            <Button Content="Restore" Click="{x:Bind Todos.Restore}" Margin="5" />
         </StackPanel>
     </Grid>
 </Page>

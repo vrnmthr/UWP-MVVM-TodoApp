@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Data.TempData;
 
 namespace Data
 {
     public class DataService : IDataProvider
     {
-        List<Todo> Todos = new List<Todo>()
-        {
-            new Todo(){Id = 0, Note = "First Todo!", DateAssigned = DateTime.Now, Recycled = false},
-            new Todo(){Id = 1, Note = "Second Todo!", DateAssigned = DateTime.Now, Recycled = false},
-            new Todo(){Id = 2, Note = "Third Todo!", DateAssigned = DateTime.Now, Recycled = false}
-        };
 
         public void Create(Todo todo)
         {
@@ -39,10 +34,20 @@ namespace Data
             todo.Recycled = true;
         }
 
-        public void Recycle(int id)
+        public void Recycle(Guid id)
         {
             Todo t = Todos.Where(x => x.Id.Equals(id)).Single();
             t.Recycled = true;
+        }
+
+        public void Restore(Todo todo)
+        {
+            //TODO
+        }
+
+        public void Restore(Guid id)
+        {
+            //TODO
         }
 
         public void Update(Todo todo)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Data;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace ViewModels
 {
@@ -23,10 +24,9 @@ namespace ViewModels
             this.Todo = todo;
         }
 
-        public int Id
+        public Guid Id
         {
             get => Todo.Id;
-            set => Todo.Id = value;
         }
 
         public DateTime DateAssigned
@@ -35,7 +35,7 @@ namespace ViewModels
             set
             {
                 Todo.DateAssigned = value;
-                PropertyChanged(this, new PropertyChangedEventArgs("DateAssigned"));
+                NotifyPropertyChanged("DateAssigned");
             }
         }
 
@@ -44,8 +44,8 @@ namespace ViewModels
             get => Todo.Note;
             set
             {
-                Todo.Note = Note;
-                PropertyChanged(this, new PropertyChangedEventArgs("Note"));
+                Todo.Note = value;
+                NotifyPropertyChanged("Note");
             }
         }
 
@@ -54,9 +54,23 @@ namespace ViewModels
             get => Todo.Recycled;
             set
             {
-                Todo.Recycled = Recycled;
-                PropertyChanged(this, new PropertyChangedEventArgs("Recycled"));
+                Todo.Recycled = value;
+                NotifyPropertyChanged("Recycled");
             }
         }
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                Debug.WriteLine("PropertyChanged");
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+            else
+            {
+                Debug.WriteLine("PropertyChanged = null");
+            }
+        }
+
     }
 }

@@ -1,2 +1,3 @@
 ﻿Bugs:
-- Update does not work correctly for Recycled fields
+- data service throws error when settings IDs
+- 

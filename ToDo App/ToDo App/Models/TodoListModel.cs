@@ -65,14 +65,45 @@ namespace Models
         /// and does nothing otherwise. 
         /// </summary>
         /// <param name="id">Todo to recycle</param>
-        public void Recycle(int id)
+        public void Recycle(Guid id)
         {
-            if (Todos.Exists((Todo t) => t.Id == id))
+            if (Todos.Exists((Todo t) => t.Id.Equals(id)))
             {
-                Todo todo = Todos.Where((Todo t) => t.Id == id).Single();
+                Todo todo = Todos.Where((Todo t) => t.Id.Equals(id)).Single();
                 Todos.Remove(todo);
                 RecycledTodos.Add(todo);
                 Data.Recycle(id);
+            }
+        }
+
+        /// <summary>
+        /// Restores a Todo if it has already been recycled
+        /// and does nothing otherwise.
+        /// </summary>
+        /// <param name="todo">Todo to restore</param>
+        public void Restore(Todo todo)
+        {
+            if (Todos.Contains(todo))
+            {
+                RecycledTodos.Remove(todo);
+                Todos.Add(todo);
+                Data.Restore(todo);
+            }
+        }
+
+        /// <summary>
+        /// Restores a Todo if it has already been recycled
+        /// and does nothing otherwise. 
+        /// </summary>
+        /// <param name="id">Todo to restore</param>
+        public void Restore(Guid id)
+        {
+            if (Todos.Exists((Todo t) => t.Id.Equals(id)))
+            {
+                Todo todo = Todos.Where((Todo t) => t.Id.Equals(id)).Single();
+                RecycledTodos.Remove(todo);
+                Todos.Add(todo);
+                Data.Restore(id);
             }
         }
 

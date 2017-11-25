@@ -21,11 +21,11 @@ namespace ToDo_App
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class RecycledView : Page
     {
         public ToDoListViewModel Todos { get; set; }
 
-        public MainPage()
+        public RecycledView()
         {
             this.InitializeComponent();
             Todos = new ToDoListViewModel();
@@ -33,7 +33,7 @@ namespace ToDo_App
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(RecycledView));
+            this.Frame.Navigate(typeof(MainPage));
         }
     }
 }

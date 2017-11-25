@@ -24,7 +24,7 @@ namespace Data
         /// Recycles todo with given ID
         /// </summary>
         /// <param name="id">Id of todo to recycle</param>
-        void Recycle(int id);
+        void Recycle(Guid id);
 
         /// <summary>
         /// Finds the Todo with a matching ID as the given one
@@ -46,5 +46,17 @@ namespace Data
         /// <returns>List of Todos</returns>
         IEnumerable<Todo> GetRecycledTodos(Func<Todo, bool> lambda);
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="todo"></param>
+        void Restore(Todo todo);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        void Restore(Guid id);
     }
 }

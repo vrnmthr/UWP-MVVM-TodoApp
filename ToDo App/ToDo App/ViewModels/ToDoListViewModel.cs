@@ -8,6 +8,7 @@ using Models;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace ViewModels
 {
@@ -28,6 +29,7 @@ namespace ViewModels
         {
             TodoList = new TodoListModel();
             Todos = new ObservableCollection<TodoViewModel>();
+            RecycledTodos = new ObservableCollection<TodoViewModel>();
             _SelectedIndex = -1;
             foreach (var todo in TodoList.GetTodos())
             {
@@ -70,7 +72,8 @@ namespace ViewModels
         /// <param name="Todo">Todo to add</param>
         public void Add()
         {
-            var td = new Todo();
+            Debug.WriteLine("added new");
+            var td = new Todo() { DateAssigned = DateTime.Now, Recycled = false};
             var tdvm = new TodoViewModel(td);
             tdvm.PropertyChanged += Todo_PropertyChanged;
             Todos.Add(tdvm);
@@ -83,12 +86,27 @@ namespace ViewModels
         /// </summary>
         public void Delete()
         {
-            if ((bool) SelectedTodo?.Recycled)
+            Debug.WriteLine("delete called");
+            if ((bool) !SelectedTodo?.Recycled)
             {
+                Debug.WriteLine("deleted");
                 var toDelete = SelectedTodo;
                 Todos.RemoveAt(SelectedIndex);
                 RecycledTodos.Add(toDelete);
                 TodoList.Recycle(toDelete.Id);
+            }
+        }
+
+        public void Restore()
+        {
+            Debug.WriteLine("restore called");
+            if ((bool) SelectedTodo?.Recycled)
+            {
+                Debug.WriteLine("restored");
+                var toRestore = SelectedTodo;
+                RecycledTodos.RemoveAt(SelectedIndex);
+                Todos.Add(toRestore);
+                TodoList.Restore(toRestore.Id);
             }
         }
 

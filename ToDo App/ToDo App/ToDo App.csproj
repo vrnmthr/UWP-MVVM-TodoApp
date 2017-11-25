@@ -98,11 +98,15 @@
     <Compile Include="Converters\ObjectExistsToVisible.cs" />
     <Compile Include="Data\DataService.cs" />
     <Compile Include="Data\IDataProvider.cs" />
+    <Compile Include="Data\TempData.cs" />
     <Compile Include="Data\Todo.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\TodoListModel.cs" />
+    <Compile Include="RecycledView.xaml.cs">
+      <DependentUpon>RecycledView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Shivani.cs" />
     <Compile Include="ViewModels\NotificationBase.cs" />
     <Compile Include="ViewModels\ToDoListViewModel.cs" />
@@ -134,6 +138,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecycledView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
