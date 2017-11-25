@@ -8,7 +8,7 @@ namespace Data
 {
     public class Todo
     {
-        public int Id { get; }
+        public int Id { get; set; }
         public string Note { get; set; }
         public DateTime DateAssigned { get; set; }
         public bool Recycled { get; set; }

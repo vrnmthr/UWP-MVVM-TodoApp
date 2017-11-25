@@ -8,7 +8,12 @@ namespace Data
 {
     public class DataService : IDataProvider
     {
-        List<Todo> Todos = new List<Todo>();
+        List<Todo> Todos = new List<Todo>()
+        {
+            new Todo(){Id = 0, Note = "First Todo!", DateAssigned = DateTime.Now, Recycled = false},
+            new Todo(){Id = 1, Note = "Second Todo!", DateAssigned = DateTime.Now, Recycled = false},
+            new Todo(){Id = 2, Note = "Third Todo!", DateAssigned = DateTime.Now, Recycled = false}
+        };
 
         public void Create(Todo todo)
         {

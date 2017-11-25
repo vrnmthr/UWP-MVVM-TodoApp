@@ -11,11 +11,11 @@ using System.Runtime.CompilerServices;
 
 namespace ViewModels
 {
-    class ToDoListViewModel : INotifyPropertyChanged
+    public class ToDoListViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        ObservableCollection<TodoViewModel> Todos;
-        ObservableCollection<TodoViewModel> RecycledTodos;
+        public ObservableCollection<TodoViewModel> Todos { get; }
+        public ObservableCollection<TodoViewModel> RecycledTodos { get; }
         TodoListModel TodoList;
         int _SelectedIndex;
 
@@ -40,25 +40,17 @@ namespace ViewModels
                 this.RecycledTodos.Add(tdvm);
             }
         }
-        
-        public ObservableCollection<TodoViewModel> GetTodos()
-        {
-            return Todos;
-        }
-
-        public ObservableCollection<TodoViewModel> GetRecycledTodos()
-        {
-            return RecycledTodos;
-        }
 
         public int SelectedIndex
         {
             get { return _SelectedIndex; }
             set
             {
-                if (SelectedIndex != value)
+                if (_SelectedIndex != value)
                 {
-                    PropertyChanged(this, new PropertyChangedEventArgs("SelectedToDo"));
+                    _SelectedIndex = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs("SelectedTodo"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("SelectedIndex"));
                 }
             }
         }
@@ -76,15 +68,14 @@ namespace ViewModels
         /// and updates the model behind to add it to the data.
         /// </summary>
         /// <param name="Todo">Todo to add</param>
-        public void Add(Todo Todo)
+        public void Add()
         {
-            var tdvm = new TodoViewModel(Todo);
+            var td = new Todo();
+            var tdvm = new TodoViewModel(td);
             tdvm.PropertyChanged += Todo_PropertyChanged;
-            var AddIn = Todos;
-            if (tdvm.GetRecycled()) AddIn = RecycledTodos;
-            AddIn.Add(tdvm);
-            TodoList.Create(Todo);
-            SelectedIndex = AddIn.IndexOf(tdvm);
+            Todos.Add(tdvm);
+            TodoList.Create(td);
+            SelectedIndex = Todos.IndexOf(tdvm);
         }
 
         /// <summary>
@@ -92,20 +83,18 @@ namespace ViewModels
         /// </summary>
         public void Delete()
         {
-            if ((bool) SelectedTodo?.GetRecycled())
+            if ((bool) SelectedTodo?.Recycled)
             {
                 var toDelete = SelectedTodo;
                 Todos.RemoveAt(SelectedIndex);
                 RecycledTodos.Add(toDelete);
-                TodoList.Recycle(toDelete.GetId());
+                TodoList.Recycle(toDelete.Id);
             }
         }
 
-        private void Todo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void Todo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            throw new NotImplementedException();
+            TodoList.Update(((TodoViewModel)sender).Todo);
         }
-
-
     }
 }

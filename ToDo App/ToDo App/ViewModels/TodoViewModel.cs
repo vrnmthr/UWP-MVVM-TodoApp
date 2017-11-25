@@ -12,7 +12,7 @@ namespace ViewModels
     public class TodoViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        Todo todo;
+        public Todo Todo { get; set; }
 
         /// <summary>
         /// Constructor that creates a TodoViewModel out of a Todo
@@ -20,45 +20,43 @@ namespace ViewModels
         /// <param name="todo">Todo wrapped into the ViewModel</param>
         public TodoViewModel(Todo todo)
         {
-            this.todo = todo;
+            this.Todo = todo;
         }
 
-        public int GetId()
+        public int Id
         {
-            return todo.Id;
+            get => Todo.Id;
+            set => Todo.Id = value;
         }
 
-        public DateTime GetDateAssigned()
+        public DateTime DateAssigned
         {
-            return todo.DateAssigned;
+            get => Todo.DateAssigned;
+            set
+            {
+                Todo.DateAssigned = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("DateAssigned"));
+            }
         }
 
-        public void SetDateAssigned(DateTime Date)
+        public string Note
         {
-            todo.DateAssigned = Date;
-            PropertyChanged(this, new PropertyChangedEventArgs("DateAssigned"));
+            get => Todo.Note;
+            set
+            {
+                Todo.Note = Note;
+                PropertyChanged(this, new PropertyChangedEventArgs("Note"));
+            }
         }
 
-        public string GetNote()
+        public bool Recycled
         {
-            return todo.Note;
-        }
-
-        public void SetNote(string Note)
-        {
-            todo.Note = Note;
-            PropertyChanged(this, new PropertyChangedEventArgs("Note"));
-        }
-
-        public bool GetRecycled()
-        {
-            return todo.Recycled;
-        }
-
-        public void SetRecycled(bool Recycled)
-        {
-            todo.Recycled = Recycled;
-            PropertyChanged(this, new PropertyChangedEventArgs("Recycled"));
+            get => Todo.Recycled;
+            set
+            {
+                Todo.Recycled = Recycled;
+                PropertyChanged(this, new PropertyChangedEventArgs("Recycled"));
+            }
         }
     }
 }
