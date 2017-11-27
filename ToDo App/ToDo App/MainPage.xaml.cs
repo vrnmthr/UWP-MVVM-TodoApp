@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,6 +28,7 @@ namespace ToDo_App
 
         public MainPage()
         {
+            Debug.WriteLine("constructed");
             this.InitializeComponent();
             Todos = new ToDoListViewModel();
         }
@@ -34,6 +36,23 @@ namespace ToDo_App
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(RecycledView));
+        }
+
+        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (!string.IsNullOrWhiteSpace(sender.Text))
+            {
+                Todos.Filter = (x => (bool) x.Note?.ToLower().Contains(sender.Text?.ToLower()));
+            }
+            else
+            {
+                Todos.Filter = (x => true);
+            }
+        }
+
+        private void toggleSwitch1_Toggled(object sender, RoutedEventArgs e)
+        {
+            Todos.SelectedTodo.HasReminder = (sender as ToggleSwitch).IsOn;
         }
     }
 }

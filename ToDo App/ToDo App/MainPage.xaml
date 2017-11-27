@@ -11,6 +11,8 @@
 
     <Page.Resources>
         <converters:ObjectExistsToVisible x:Key="ObjectExistsToVisible"/>
+        <converters:BooleanToVisible x:Key="BooleanToVisible"/>
+        <converters:DateTimeToDateTimeOffset x:Key="DateTimeToDateTimeOffset"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -21,11 +23,12 @@
 
         <StackPanel Grid.Column="0" Orientation="Vertical">
             <Button Content="New" Click="{x:Bind Todos.Add}" Margin="5"/>
-            <TextBlock Text="Debugging:"></TextBlock>
-            <TextBlock Text="{x:Bind Todos.SelectedIndex, Mode=OneWay}"></TextBlock>
-            <TextBlock Text="End----"></TextBlock>
+            <TextBlock Text="Your Todos:" Margin="5"></TextBlock>
+            <TextBlock Text="{x:Bind Todos.SelectedIndex, Mode=OneWay}" Margin="5"></TextBlock>
+            <AutoSuggestBox PlaceholderText="Search..." TextChanged="AutoSuggestBox_TextChanged" 
+                            QueryIcon="Find" Margin="5"></AutoSuggestBox>
             <ListView  x:Name="MainList" 
-              ItemsSource="{x:Bind Todos.Todos, Mode=OneWay}"  
+              ItemsSource="{x:Bind Todos.ViewableTodos, Mode=OneWay}"  
               SelectedIndex="{x:Bind Todos.SelectedIndex, Mode=TwoWay}" 
               MinWidth="250" Margin="5" MaxWidth="300">
                 <ListView.ItemTemplate>
@@ -37,17 +40,25 @@
                 </ListView.ItemTemplate>
             </ListView>
             <HyperlinkButton Content="See Recycled Todos"
-             Click="HyperlinkButton_Click"/>
+             Click="HyperlinkButton_Click" Margin="5"/>
         </StackPanel>
 
         <StackPanel Grid.Column="2" Orientation="Vertical" Visibility="{x:Bind Todos.SelectedTodo, Mode=OneWay, Converter={StaticResource ObjectExistsToVisible}}" >
             <TextBlock
               Text="{x:Bind Todos.SelectedTodo.DateAssigned, Mode=OneWay, FallbackValue=''}" 
               Margin="5"/>
-            <TextBox 
-              Text="{x:Bind Todos.SelectedTodo.Note, Mode=TwoWay, FallbackValue=''}" 
+            <TextBox PlaceholderText="Add a note here!"
+              Text="{x:Bind Todos.SelectedTodo.Note, Mode=TwoWay, FallbackValue='Add a note here!'}" 
               Margin="5" TextWrapping="Wrap" MinWidth="300"/>
-            <Button Content="Recycle" Click="{x:Bind Todos.Delete}" Margin="5" />
+            <StackPanel Orientation="Horizontal" Width="600">
+                <ToggleSwitch x:Name="toggleSwitch1" Header="Reminder" Margin="5" 
+                              Toggled="toggleSwitch1_Toggled" IsOn="{x:Bind Todos.SelectedTodo.HasReminder, Mode=TwoWay}"/>
+                <CalendarDatePicker Margin="5" Visibility="{x:Bind Todos.SelectedTodo.HasReminder, Mode=OneWay, Converter={StaticResource BooleanToVisible}}"
+                                    PlaceholderText="Reminder Date" Date="{x:Bind Todos.SelectedTodo.Reminder, Mode=TwoWay, Converter={StaticResource DateTimeToDateTimeOffset}}"/>
+                <TimePicker Margin="5" Visibility="{x:Bind Todos.SelectedTodo.HasReminder, Mode=OneWay, Converter={StaticResource BooleanToVisible}}" 
+                            Time="{x:Bind Todos.SelectedTodo.ReminderProxy, Mode=TwoWay}"/>
+            </StackPanel>
+            <Button Content="Recycle" Click="{x:Bind Todos.Recycle}" Margin="5" />
         </StackPanel>
     </Grid>
 </Page>

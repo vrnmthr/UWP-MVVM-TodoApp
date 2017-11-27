@@ -15,6 +15,8 @@ namespace Data
         public string Note { get; set; }
         public DateTime DateAssigned { get; set; }
         public bool Recycled { get; set; }
+        public bool HasReminder { get; set; }
+        public DateTime Reminder { get; set; }
 
         public Todo()
         {

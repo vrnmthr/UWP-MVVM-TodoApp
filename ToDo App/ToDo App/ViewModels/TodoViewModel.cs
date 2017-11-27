@@ -54,22 +54,63 @@ namespace ViewModels
             get => Todo.Recycled;
             set
             {
-                Todo.Recycled = value;
-                NotifyPropertyChanged("Recycled");
+                if (!Todo.Reminder.Equals(value))
+                {
+                    Todo.Recycled = value;
+                    NotifyPropertyChanged("Recycled");
+                }
+            }
+        }
+
+        public bool HasReminder
+        {
+            get => Todo.HasReminder;
+            set
+            {
+                if (!Todo.HasReminder.Equals(value))
+                {
+                    Todo.HasReminder = value;
+                    NotifyPropertyChanged("HasReminder");
+                }
+            }
+        }
+
+        public DateTime Reminder
+        {
+            get => Todo.Reminder;
+            set
+            {
+                if (!Todo.Reminder.Equals(value))
+                {
+                    Todo.Reminder = value;
+                    NotifyPropertyChanged("Reminder");
+                }
+            }
+        }
+
+        public TimeSpan ReminderProxy
+        {
+            get
+            {
+                //Extract the timespan from the original datetime
+                return Reminder - Reminder.Date;
+            }
+            set
+            {
+                //See if the timespan is different the the current value
+                if (ReminderProxy != value)
+                {
+                    //If it is, set the original date time to the
+                    //original date, plus the new timespan value
+                    Reminder = Reminder.Date.Add(value);
+                    NotifyPropertyChanged("Reminder");
+                }
             }
         }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                Debug.WriteLine("PropertyChanged");
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-            else
-            {
-                Debug.WriteLine("PropertyChanged = null");
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
     }

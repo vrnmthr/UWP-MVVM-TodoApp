@@ -95,6 +95,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToVisible.cs" />
+    <Compile Include="Converters\DateTimeToDateTimeOffset.cs" />
     <Compile Include="Converters\ObjectExistsToVisible.cs" />
     <Compile Include="Data\DataService.cs" />
     <Compile Include="Data\IDataProvider.cs" />

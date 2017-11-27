@@ -22,7 +22,7 @@
         <StackPanel Grid.Column="0" Orientation="Vertical">
             <TextBlock Text="Your Recycled Todos:"></TextBlock>
             <ListView  x:Name="RecycledList" 
-              ItemsSource="{x:Bind Todos.RecycledTodos, Mode=OneWay}"  
+              ItemsSource="{x:Bind Todos.Todos, Mode=OneWay}"  
               SelectedIndex="{x:Bind Todos.SelectedIndex, Mode=TwoWay}" 
               MinWidth="250" Margin="5" MaxWidth="300">
                 <ListView.ItemTemplate>
@@ -38,6 +38,12 @@
         </StackPanel>
 
         <StackPanel Grid.Column="2" Orientation="Vertical" Visibility="{x:Bind Todos.SelectedTodo, Mode=OneWay, Converter={StaticResource ObjectExistsToVisible}}" >
+            <TextBlock
+              Text="{x:Bind Todos.SelectedTodo.DateAssigned, Mode=OneWay, FallbackValue=''}" 
+              Margin="5"/>
+            <TextBlock
+              Text="{x:Bind Todos.SelectedTodo.Note, Mode=OneWay, FallbackValue=''}" 
+              Margin="5" TextWrapping="Wrap" Width="300"/>
             <Button Content="Restore" Click="{x:Bind Todos.Restore}" Margin="5" />
         </StackPanel>
     </Grid>

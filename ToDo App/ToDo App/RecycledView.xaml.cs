@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,8 +28,10 @@ namespace ToDo_App
 
         public RecycledView()
         {
+            Debug.WriteLine("constructed");
             this.InitializeComponent();
-            Todos = new ToDoListViewModel();
+            Todos = new ToDoListViewModel(true);
+
         }
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)

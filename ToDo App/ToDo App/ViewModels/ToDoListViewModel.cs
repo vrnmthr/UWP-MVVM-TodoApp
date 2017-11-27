@@ -14,43 +14,63 @@ namespace ViewModels
 {
     public class ToDoListViewModel : INotifyPropertyChanged
     {
+
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<TodoViewModel> Todos { get; }
-        public ObservableCollection<TodoViewModel> RecycledTodos { get; }
         TodoListModel TodoList;
-        int _SelectedIndex;
 
         /// <summary>
         /// Constructor, creating a new TodoList. Fills
         /// Todos and RecycledTodos with TodoViewModels from
         /// the database
         /// </summary>
-        public ToDoListViewModel()
+        public ToDoListViewModel(bool Recycled = false)
         {
             TodoList = new TodoListModel();
             Todos = new ObservableCollection<TodoViewModel>();
-            RecycledTodos = new ObservableCollection<TodoViewModel>();
+            ViewableTodos = Todos;
+            _Filter = (x => true);
             _SelectedIndex = -1;
-            foreach (var todo in TodoList.GetTodos())
+            foreach (var todo in
+                Recycled ? TodoList.GetRecycledTodos() : TodoList.GetTodos())
             {
                 var tdvm = new TodoViewModel(todo);
                 this.Todos.Add(tdvm);
             }
-            foreach (var todo in TodoList.GetRecycledTodos())
+        }
+
+        public ObservableCollection<TodoViewModel> ViewableTodos { get; private set; }
+        Func<TodoViewModel, bool> _Filter;
+        public Func<TodoViewModel, bool> Filter
+        {
+            get => _Filter;
+            set
             {
-                var tdvm = new TodoViewModel(todo);
-                this.RecycledTodos.Add(tdvm);
+                if (!_Filter.Equals(value))
+                {
+                    _Filter = value;
+                    ViewableTodos = new ObservableCollection<TodoViewModel>();
+                    foreach (var t in Todos.Where(_Filter))
+                    {
+                        ViewableTodos.Add(t);
+                    }
+                    PropertyChanged(this, new PropertyChangedEventArgs("Filter"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("ViewableTodos"));
+                }
             }
         }
 
+        int _SelectedIndex;
         public int SelectedIndex
         {
             get { return _SelectedIndex; }
             set
             {
+                Debug.WriteLine("selected index" + value);
                 if (_SelectedIndex != value)
                 {
                     _SelectedIndex = value;
+                    Debug.WriteLine("changed selected index: " + value);
                     PropertyChanged(this, new PropertyChangedEventArgs("SelectedTodo"));
                     PropertyChanged(this, new PropertyChangedEventArgs("SelectedIndex"));
                 }
@@ -61,7 +81,7 @@ namespace ViewModels
         {
             get
             {
-                return (SelectedIndex >= 0) ? Todos[SelectedIndex] : null;
+                return (SelectedIndex >= 0) ? ViewableTodos[SelectedIndex] : null;
             }
         }
 
@@ -73,27 +93,35 @@ namespace ViewModels
         public void Add()
         {
             Debug.WriteLine("added new");
+
             var td = new Todo() { DateAssigned = DateTime.Now, Recycled = false};
             var tdvm = new TodoViewModel(td);
+            
+            //updates model
+            TodoList.Create(td);
+
+            //updates view model
             tdvm.PropertyChanged += Todo_PropertyChanged;
             Todos.Add(tdvm);
-            TodoList.Create(td);
             SelectedIndex = Todos.IndexOf(tdvm);
         }
 
         /// <summary>
-        /// Deletes the Todo at SelectedIndex
+        /// Recycles the todo at selected index
         /// </summary>
-        public void Delete()
+        public void Recycle()
         {
-            Debug.WriteLine("delete called");
+            Debug.WriteLine("recycle called");
             if ((bool) !SelectedTodo?.Recycled)
             {
-                Debug.WriteLine("deleted");
-                var toDelete = SelectedTodo;
-                Todos.RemoveAt(SelectedIndex);
-                RecycledTodos.Add(toDelete);
-                TodoList.Recycle(toDelete.Id);
+                Debug.WriteLine("recycled!");
+
+                //updates model
+                TodoList.Recycle(SelectedTodo.Id);
+
+                //updates view model
+                SelectedTodo.Recycled = true;
+                ViewableTodos.RemoveAt(SelectedIndex);
             }
         }
 
@@ -102,11 +130,14 @@ namespace ViewModels
             Debug.WriteLine("restore called");
             if ((bool) SelectedTodo?.Recycled)
             {
-                Debug.WriteLine("restored");
-                var toRestore = SelectedTodo;
-                RecycledTodos.RemoveAt(SelectedIndex);
-                Todos.Add(toRestore);
-                TodoList.Restore(toRestore.Id);
+                Debug.WriteLine("restored!");
+
+                //updates model
+                TodoList.Restore(SelectedTodo.Id);
+
+                //updates view model
+                SelectedTodo.Recycled = false;
+                Todos.RemoveAt(SelectedIndex);
             }
         }
 
