@@ -15,7 +15,6 @@ namespace Models
     /// </summary>
     public class TodoListModel
     {
-        List<Todo> RecycledTodos { get; set; }
         List<Todo> Todos { get; set; }
         IDataProvider Data;
 

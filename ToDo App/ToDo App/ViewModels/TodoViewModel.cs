@@ -57,7 +57,7 @@ namespace ViewModels
                 if (!Todo.Reminder.Equals(value))
                 {
                     Todo.Recycled = value;
-                    NotifyPropertyChanged("Recycled");
+                    //NotifyPropertyChanged("Recycled");
                 }
             }
         }

@@ -106,6 +106,8 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\TodoListModel.cs" />
+    <Compile Include="Notifications\NotificationSender.cs" />
+    <Compile Include="Notifications\ToastNotifications.cs" />
     <Compile Include="RecycledView.xaml.cs">
       <DependentUpon>RecycledView.xaml</DependentUpon>
     </Compile>
@@ -122,7 +124,7 @@
     <None Include="ToDo App_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Assets\bell-icon.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
@@ -130,6 +132,7 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Properties\Default.rd.xml" />
     <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using Notifications;
 
 namespace ViewModels
 {
@@ -17,7 +18,8 @@ namespace ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<TodoViewModel> Todos { get; }
-        TodoListModel TodoList;
+        TodoListModel Model;
+        NotificationSender NotificationService;
 
         /// <summary>
         /// Constructor, creating a new TodoList. Fills
@@ -26,17 +28,21 @@ namespace ViewModels
         /// </summary>
         public ToDoListViewModel(bool Recycled = false)
         {
-            TodoList = new TodoListModel();
+            Model = new TodoListModel();
             Todos = new ObservableCollection<TodoViewModel>();
+            NotificationService = new NotificationSender(Todos);
             ViewableTodos = Todos;
             _Filter = (x => true);
             _SelectedIndex = -1;
             foreach (var todo in
-                Recycled ? TodoList.GetRecycledTodos() : TodoList.GetTodos())
+                Recycled ? Model.GetRecycledTodos() : Model.GetTodos())
             {
                 var tdvm = new TodoViewModel(todo);
+                tdvm.PropertyChanged += Todo_PropertyChanged;
                 this.Todos.Add(tdvm);
             }
+
+            Task.Factory.StartNew(NotificationService.Start);
         }
 
         public ObservableCollection<TodoViewModel> ViewableTodos { get; private set; }
@@ -98,7 +104,7 @@ namespace ViewModels
             var tdvm = new TodoViewModel(td);
             
             //updates model
-            TodoList.Create(td);
+            Model.Create(td);
 
             //updates view model
             tdvm.PropertyChanged += Todo_PropertyChanged;
@@ -117,7 +123,7 @@ namespace ViewModels
                 Debug.WriteLine("recycled!");
 
                 //updates model
-                TodoList.Recycle(SelectedTodo.Id);
+                Model.Recycle(SelectedTodo.Id);
 
                 //updates view model
                 SelectedTodo.Recycled = true;
@@ -133,7 +139,7 @@ namespace ViewModels
                 Debug.WriteLine("restored!");
 
                 //updates model
-                TodoList.Restore(SelectedTodo.Id);
+                Model.Restore(SelectedTodo.Id);
 
                 //updates view model
                 SelectedTodo.Recycled = false;
@@ -143,7 +149,7 @@ namespace ViewModels
 
         void Todo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            TodoList.Update(((TodoViewModel)sender).Todo);
+            Model.Update(((TodoViewModel)sender).Todo);
         }
     }
 }
