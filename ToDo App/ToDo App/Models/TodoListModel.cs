@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Data;
+using System.Diagnostics;
 
 namespace Models
 {
     /// <summary>
     /// TodoList Class representing a todo list. Interfaces with
     /// an IDataProvider in order to do CRUD operations on a data
-    /// backend. Maintains parallel lists of recycled todos and 
-    /// normal todos. 
+    /// backend.
     /// </summary>
     public class TodoListModel
     {
@@ -20,13 +20,13 @@ namespace Models
 
         /// <summary>
         /// Constructs a TodoListModel with data loaded in from the data
-        /// service 
+        /// service
         /// </summary>
         public TodoListModel()
         {
             Data = new DataService();
-            Todos = Data.GetTodos((Todo t) => true).ToList();
-            RecycledTodos = Data.GetRecycledTodos((Todo t) => true).ToList();
+            Todos = new List<Todo>();
+            Todos.AddRange(Data.GetTodos((Todo t) => true));
         }
         
         /// <summary>
@@ -35,75 +35,10 @@ namespace Models
         /// <param name="todo">Todo to add</param>
         public void Create(Todo todo)
         {
-            var SearchIn = Todos;
-            if (todo.Recycled) SearchIn = RecycledTodos;
-            if (!SearchIn.Exists((Todo t) => t.Id == todo.Id))
-            {
-                SearchIn.Add(todo);
-                Data.Create(todo);
-            }
-        }
-
-        /// <summary>
-        /// Recycles a Todo if it has not already been recycled,
-        /// and does nothing otherwise.
-        /// </summary>
-        /// <param name="todo">Todo to recycle</param>
-        public void Recycle(Todo todo)
-        {
-            if (Todos.Contains(todo))
-            {
-                RecycledTodos.Add(todo);
-                Todos.Remove(todo);
-                Data.Recycle(todo);
-            }
-        }
-
-        /// <summary>
-        /// Recycles a Todo if it has not already been recycled, 
-        /// and does nothing otherwise. 
-        /// </summary>
-        /// <param name="id">Todo to recycle</param>
-        public void Recycle(Guid id)
-        {
-            if (Todos.Exists((Todo t) => t.Id.Equals(id)))
-            {
-                Todo todo = Todos.Where((Todo t) => t.Id.Equals(id)).Single();
-                Todos.Remove(todo);
-                RecycledTodos.Add(todo);
-                Data.Recycle(id);
-            }
-        }
-
-        /// <summary>
-        /// Restores a Todo if it has already been recycled
-        /// and does nothing otherwise.
-        /// </summary>
-        /// <param name="todo">Todo to restore</param>
-        public void Restore(Todo todo)
-        {
-            if (Todos.Contains(todo))
-            {
-                RecycledTodos.Remove(todo);
-                Todos.Add(todo);
-                Data.Restore(todo);
-            }
-        }
-
-        /// <summary>
-        /// Restores a Todo if it has already been recycled
-        /// and does nothing otherwise. 
-        /// </summary>
-        /// <param name="id">Todo to restore</param>
-        public void Restore(Guid id)
-        {
-            if (Todos.Exists((Todo t) => t.Id.Equals(id)))
-            {
-                Todo todo = Todos.Where((Todo t) => t.Id.Equals(id)).Single();
-                RecycledTodos.Remove(todo);
-                Todos.Add(todo);
-                Data.Restore(id);
-            }
+            if (Todos.Exists((Todo t) => t.Id == todo.Id))
+                throw new ArgumentException("Todo with given ID already exists");
+            Todos.Add(todo);
+            Data.Create(todo);
         }
 
         /// <summary>
@@ -113,22 +48,27 @@ namespace Models
         /// <param name="todo">Todo containing updated information</param>
         public void Update(Todo todo)
         {
-            List<Todo> SearchIn = Todos;
-            if (todo.Recycled) SearchIn = RecycledTodos;
-            Todo existing = SearchIn.Where((Todo t) => t.Id == todo.Id).Single();
-            existing.DateAssigned = todo.DateAssigned;
-            existing.Note = todo.Note;
+            Todo existing = Todos.Where((Todo t) => t.Id == todo.Id).Single();
+            existing.CopyFrom(todo);
             Data.Update(todo);
         }
 
+        /// <summary>
+        /// Returns all Todos that are not recycled
+        /// </summary>
+        /// <returns>IEnumerable of Todos that are not recycled</returns>
         public IEnumerable<Todo> GetTodos()
         {
-            return Todos;
+            return Todos.Where((Todo x) => !x.Recycled);
         }
 
+        /// <summary>
+        /// Returns all Todos that are recycled
+        /// </summary>
+        /// <returns>IEnumerable of Todos that are recycled</returns>
         public IEnumerable<Todo> GetRecycledTodos()
         {
-            return RecycledTodos;
+            return Todos.Where((Todo x) => x.Recycled);
         }
     }
 }

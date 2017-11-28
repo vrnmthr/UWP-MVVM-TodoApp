@@ -14,6 +14,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ToDo_App
 {
@@ -30,6 +32,11 @@ namespace ToDo_App
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            using (var db = new DataContext())
+            {
+                db.Database.Migrate();
+            }
         }
 
         /// <summary>

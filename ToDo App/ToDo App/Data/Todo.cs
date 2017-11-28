@@ -22,6 +22,24 @@ namespace Data
         {
             this.Id = Guid.NewGuid();
         }
+        
+        /// <summary>
+        /// Copies all fields over from one Todo to another. Should only
+        /// be used for Todos with the same ID - IDs should never be changed.
+        /// </summary>
+        /// <param name="todo">Todo to copy fields from</param>
+        /// <param name="overrideID">Throw errors if ID is changed</param>
+        public void CopyFrom(Todo todo, bool overrideID = false)
+        {
+            if (!overrideID && !todo.Id.Equals(Id))
+                throw new ArgumentException("Todos must have same ID");
+            if (overrideID) Id = todo.Id;
+            Note = todo.Note;
+            DateAssigned = todo.DateAssigned;
+            Recycled = todo.Recycled;
+            HasReminder = todo.HasReminder;
+            Reminder = todo.Reminder;
+        }
 
     }
 }

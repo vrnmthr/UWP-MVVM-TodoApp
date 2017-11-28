@@ -13,19 +13,26 @@ using Notifications;
 
 namespace ViewModels
 {
+    /// <summary>
+    /// ViewModel for TodoLists that wraps a TodoListModel and communicates
+    /// with the View. Contains notification sending capabilities. 
+    /// </summary>
     public class ToDoListViewModel : INotifyPropertyChanged
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// Root Todo list
+        /// </summary>
         public ObservableCollection<TodoViewModel> Todos { get; }
         TodoListModel Model;
         NotificationSender NotificationService;
 
         /// <summary>
-        /// Constructor, creating a new TodoList. Fills
-        /// Todos and RecycledTodos with TodoViewModels from
-        /// the database
+        /// Constructor for TodoListViewModel that can be backed by any list of Todos, supporting 
+        /// filtering and reacting to propertychanged events
         /// </summary>
+        /// <param name="Recycled">Bool representing whether to load recycled or non-recycled Todos</param>
         public ToDoListViewModel(bool Recycled = false)
         {
             Model = new TodoListModel();
@@ -42,10 +49,17 @@ namespace ViewModels
                 this.Todos.Add(tdvm);
             }
 
-            Task.Factory.StartNew(NotificationService.Start);
+            NotificationService.Start();
         }
 
+        /// <summary>
+        /// ObservableCollection of Todos that supports filtering over the root collection
+        /// and is visible to the outside
+        /// </summary>
         public ObservableCollection<TodoViewModel> ViewableTodos { get; private set; }
+        /// <summary>
+        /// Filter with which to create the ViewableTodos collection
+        /// </summary>
         Func<TodoViewModel, bool> _Filter;
         public Func<TodoViewModel, bool> Filter
         {
@@ -66,23 +80,28 @@ namespace ViewModels
             }
         }
 
+        
         int _SelectedIndex;
+        /// <summary>
+        /// Property representing index of currently selected value in ViewableTodos
+        /// </summary>
         public int SelectedIndex
         {
             get { return _SelectedIndex; }
             set
             {
-                Debug.WriteLine("selected index" + value);
                 if (_SelectedIndex != value)
                 {
                     _SelectedIndex = value;
-                    Debug.WriteLine("changed selected index: " + value);
                     PropertyChanged(this, new PropertyChangedEventArgs("SelectedTodo"));
                     PropertyChanged(this, new PropertyChangedEventArgs("SelectedIndex"));
                 }
             }
         }
 
+        /// <summary>
+        /// Currently selected Todo from ViewableTodos
+        /// </summary>
         public TodoViewModel SelectedTodo
         {
             get
@@ -98,7 +117,7 @@ namespace ViewModels
         /// <param name="Todo">Todo to add</param>
         public void Add()
         {
-            Debug.WriteLine("added new");
+            //Debug.WriteLine("added new");
 
             var td = new Todo() { DateAssigned = DateTime.Now, Recycled = false};
             var tdvm = new TodoViewModel(td);
@@ -117,13 +136,9 @@ namespace ViewModels
         /// </summary>
         public void Recycle()
         {
-            Debug.WriteLine("recycle called");
             if ((bool) !SelectedTodo?.Recycled)
             {
-                Debug.WriteLine("recycled!");
-
-                //updates model
-                Model.Recycle(SelectedTodo.Id);
+                //Debug.WriteLine("recycled!");
 
                 //updates view model
                 SelectedTodo.Recycled = true;
@@ -131,15 +146,14 @@ namespace ViewModels
             }
         }
 
+        /// <summary>
+        /// Sets Recycled to be false for the current SelectedTodo
+        /// </summary>
         public void Restore()
         {
-            Debug.WriteLine("restore called");
             if ((bool) SelectedTodo?.Recycled)
             {
-                Debug.WriteLine("restored!");
-
-                //updates model
-                Model.Restore(SelectedTodo.Id);
+                //Debug.WriteLine("restored!");
 
                 //updates view model
                 SelectedTodo.Recycled = false;
@@ -147,6 +161,12 @@ namespace ViewModels
             }
         }
 
+        /// <summary>
+        /// Ensures that whenever a property of the Todos in the ObservableCollection
+        /// changes, the underlying Model is updated as well.
+        /// </summary>
+        /// <param name="sender">TodoViewModel whose property has changed</param>
+        /// <param name="e"></param>
         void Todo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Model.Update(((TodoViewModel)sender).Todo);

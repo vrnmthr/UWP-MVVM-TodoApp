@@ -24,7 +24,6 @@
         <StackPanel Grid.Column="0" Orientation="Vertical">
             <Button Content="New" Click="{x:Bind Todos.Add}" Margin="5"/>
             <TextBlock Text="Your Todos:" Margin="5"></TextBlock>
-            <TextBlock Text="{x:Bind Todos.SelectedIndex, Mode=OneWay}" Margin="5"></TextBlock>
             <AutoSuggestBox PlaceholderText="Search..." TextChanged="AutoSuggestBox_TextChanged" 
                             QueryIcon="Find" Margin="5"></AutoSuggestBox>
             <ListView  x:Name="MainList" 

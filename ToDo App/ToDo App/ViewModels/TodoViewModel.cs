@@ -34,8 +34,12 @@ namespace ViewModels
             get => Todo.DateAssigned;
             set
             {
-                Todo.DateAssigned = value;
-                NotifyPropertyChanged("DateAssigned");
+                if(!Todo.DateAssigned.Equals(value))
+                {
+                    //Debug.WriteLine("DateAssigned changed");
+                    Todo.DateAssigned = value;
+                    NotifyPropertyChanged("DateAssigned");
+                }
             }
         }
 
@@ -43,9 +47,13 @@ namespace ViewModels
         {
             get => Todo.Note;
             set
-            {
-                Todo.Note = value;
-                NotifyPropertyChanged("Note");
+            {   
+                if(Todo.Note == null || !Todo.Note.Equals(value))
+                {
+                    //Debug.WriteLine("Note changed");
+                    Todo.Note = value;
+                    NotifyPropertyChanged("Note");
+                }
             }
         }
 
@@ -56,8 +64,9 @@ namespace ViewModels
             {
                 if (!Todo.Reminder.Equals(value))
                 {
+                    //Debug.WriteLine("Recycled changed");
                     Todo.Recycled = value;
-                    //NotifyPropertyChanged("Recycled");
+                    NotifyPropertyChanged("Recycled");
                 }
             }
         }
@@ -69,6 +78,7 @@ namespace ViewModels
             {
                 if (!Todo.HasReminder.Equals(value))
                 {
+                    //Debug.WriteLine("HasReminder changed");
                     Todo.HasReminder = value;
                     NotifyPropertyChanged("HasReminder");
                 }
@@ -82,6 +92,7 @@ namespace ViewModels
             {
                 if (!Todo.Reminder.Equals(value))
                 {
+                    //Debug.WriteLine("Reminder changed");
                     Todo.Reminder = value;
                     NotifyPropertyChanged("Reminder");
                 }
@@ -100,6 +111,7 @@ namespace ViewModels
                 //See if the timespan is different the the current value
                 if (ReminderProxy != value)
                 {
+                    //Debug.WriteLine("ReminderProxy changed");
                     //If it is, set the original date time to the
                     //original date, plus the new timespan value
                     Reminder = Reminder.Date.Add(value);

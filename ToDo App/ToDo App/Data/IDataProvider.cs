@@ -15,18 +15,6 @@ namespace Data
         void Create(Todo todo);
 
         /// <summary>
-        /// Recycles given todo
-        /// </summary>
-        /// <param name="todo">Todo to recycle</param>
-        void Recycle(Todo todo);
-
-        /// <summary>
-        /// Recycles todo with given ID
-        /// </summary>
-        /// <param name="id">Id of todo to recycle</param>
-        void Recycle(Guid id);
-
-        /// <summary>
         /// Finds the Todo with a matching ID as the given one
         /// and updates the information. 
         /// </summary>
@@ -34,29 +22,15 @@ namespace Data
         void Update(Todo todo);
 
         /// <summary>
-        /// Get all Todos that are not recycled that satisfy
-        /// lambda
+        /// Finds the Todo with ID matching the given one and deletes it
+        /// </summary>
+        /// <param name="todo">Todo to delete</param>
+        void Delete(Todo todo);
+
+        /// <summary>
+        /// Gets all Todos that satisfy lambda
         /// </summary>
         /// <returns>List of Todos</returns>
         IEnumerable<Todo> GetTodos(Func<Todo, bool> lambda);
-
-        /// <summary>
-        /// Get all recycled todos that satisfy lambda
-        /// </summary>
-        /// <returns>List of Todos</returns>
-        IEnumerable<Todo> GetRecycledTodos(Func<Todo, bool> lambda);
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="todo"></param>
-        void Restore(Todo todo);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        void Restore(Guid id);
     }
 }

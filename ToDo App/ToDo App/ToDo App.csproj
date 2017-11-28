@@ -99,12 +99,19 @@
     <Compile Include="Converters\DateTimeToDateTimeOffset.cs" />
     <Compile Include="Converters\ObjectExistsToVisible.cs" />
     <Compile Include="Data\DataService.cs" />
+    <Compile Include="Data\FakeDataService.cs" />
     <Compile Include="Data\IDataProvider.cs" />
+    <Compile Include="Data\DataContext.cs" />
     <Compile Include="Data\TempData.cs" />
     <Compile Include="Data\Todo.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20171127190120_InitialMigration.cs" />
+    <Compile Include="Migrations\20171127190120_InitialMigration.designer.cs">
+      <DependentUpon>20171127190120_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataContextModelSnapshot.cs" />
     <Compile Include="Models\TodoListModel.cs" />
     <Compile Include="Notifications\NotificationSender.cs" />
     <Compile Include="Notifications\ToastNotifications.cs" />
@@ -112,7 +119,6 @@
       <DependentUpon>RecycledView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shivani.cs" />
-    <Compile Include="ViewModels\NotificationBase.cs" />
     <Compile Include="ViewModels\ToDoListViewModel.cs" />
     <Compile Include="ViewModels\TodoViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -150,8 +156,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
+      <Version>1.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <Version>1.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>5.2.3</Version>
+      <Version>6.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

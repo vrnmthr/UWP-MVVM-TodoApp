@@ -54,7 +54,13 @@ namespace ToDo_App
 
         private void toggleSwitch1_Toggled(object sender, RoutedEventArgs e)
         {
-            Todos.SelectedTodo.HasReminder = (sender as ToggleSwitch).IsOn;
+            var result = (sender as ToggleSwitch).IsOn;
+            Todos.SelectedTodo.HasReminder = result;
+            if (result && Todos.SelectedTodo.Reminder <= DateTime.Now)
+            {
+                //if notification is in the past, update it
+                Todos.SelectedTodo.Reminder = DateTime.Now.AddMinutes(5);
+            }
         }
     }
 }

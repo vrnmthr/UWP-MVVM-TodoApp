@@ -8,8 +8,16 @@ using Windows.Data.Xml.Dom;
 
 namespace Notifications
 {
+    /// <summary>
+    /// Provides functionality for creating ToastNotifications
+    /// </summary>
     public class ToastNotifications
     {
+        /// <summary>
+        /// Creates a ToastNotification with a given message
+        /// </summary>
+        /// <param name="msg">Message to show in the toast notification</param>
+        /// <returns>ToastNotification with given message</returns>
         public static ToastNotification CreateNotification(string msg)
         {
             string title = "Reminder!";

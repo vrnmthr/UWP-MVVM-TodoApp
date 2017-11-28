@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0" Orientation="Vertical">
-            <TextBlock Text="Your Recycled Todos:"></TextBlock>
+            <TextBlock Text="Your Recycled Todos:" Margin="5"></TextBlock>
             <ListView  x:Name="RecycledList" 
               ItemsSource="{x:Bind Todos.Todos, Mode=OneWay}"  
               SelectedIndex="{x:Bind Todos.SelectedIndex, Mode=TwoWay}" 
