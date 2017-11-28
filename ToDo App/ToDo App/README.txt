@@ -1,4 +1,1 @@
-﻿Bugs:
-- data service throws error when settings IDs
-- error when selecting date and then hitting new
-- error when restoring (sequence no elements?)
+A Todo App supporting Notifications and Recycling of Todos, built with the MVVM structure on UWP. 
